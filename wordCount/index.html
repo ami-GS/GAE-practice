@@ -1,13 +1,21 @@
 <html>
 <head>
 </head>
-<title>fractal</title>
+<title>Word Counter</title>
 <body>
 
-<textarea cols="80" rows="30" onkeyup="ShowLength(value);"></textarea>
-<p id="inputlength">0 word</p>
-<p id="line">0 line</p>
-<p id="paragraph">0 paragraph</p>
+<div style="text-align: center; margin-left: auto">
+    <textarea id="text" cols="80" rows="30" onkeyup="ShowLength(value);"></textarea>
+</div>
+<div style="text-align: center; margin-left: auto">
+    <input id="lang1" type="radio" value="Japanese" name="lang" checked="true" onclick="chmod(this.value)">
+    <label for="lang1">Japanese</label>
+    <input id="lang2" type="radio" value="English" name="lang" onclick="chmod(this.value)">
+    <label for="lang2">English</label>
+    <p id="inputlength">0 word</p>
+    <p id="line">0 line</p>
+    <p id="paragraph">0 paragraph</p>
+</div>
 <!--input type="button" value="0文字" id="length" onmousedown="copyLength()">＜＝文字数コピー</input!-->
 <script src="static/index.js"></script>
 

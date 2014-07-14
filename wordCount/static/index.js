@@ -1,21 +1,26 @@
 var len = 0;
+var type = "jp";
 function ShowLength( str ) {
     var strArray = str.split("\n");
     var parNum = getParagraphNum(strArray);
     var blankNum = getBlankNum(strArray);
     //var engNum = getEngNum(strArray);
     var lineNum = strArray.length - blankNum;
-    document.getElementById("inputlength").innerHTML = str.length-blankNum-lineNum+1 + " word";
+    var words = 0;
+    if(type == "jp"){words = str.length-blankNum-lineNum+1;}
+    else if(type == "en"){words = getEngNum(strArray);}
+    document.getElementById("inputlength").innerHTML = words + " word";
     document.getElementById("line").innerHTML = lineNum + " line";
     document.getElementById("paragraph").innerHTML = parNum + " paragraph";
 }
 
 function getEngNum(strArray){
     // ^(\n)+$
-    num = 0;
+    var num = 0;
     for(var i = 0; i < strArray.length; i++){
         if(strArray[i] != ""){
-            num += strArray[i].split(" ").length;
+            var splitted = strArray[i].split(" ");
+            num += splitted.length-(splitted.sort().lastIndexOf("")+1);
         }
     }
     return num;
@@ -40,6 +45,16 @@ function getParagraphNum(strArray){
         i++;
     }
     return ans
+}
+
+function chmod(lang){
+    if(lang == "Japanese"){
+        type = "jp";
+    }
+    else if(lang == "English"){
+        type = "en";
+    }
+    ShowLength(document.getElementById("text").value);
 }
 
 function copyLength(){
