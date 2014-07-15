@@ -1,10 +1,14 @@
 import webapp2
+from google.appengine.api import channel
+from google.appengine.api import users
+from google.appengine.ext.webapp import template
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
-        with open("./index.html", "r") as f:
-            for line in f.readlines():
-                self.response.write(line)
+
+        token = channel.create_channel("test")
+        template_values = {'token':token,}
+        self.response.out.write(template.render('index.html', template_values))
 
 application = webapp2.WSGIApplication([
     ("/", MainPage),

@@ -1,5 +1,14 @@
 var len = 0;
 var type = "jp";
+var token = document.getElementById("token").value;
+var channel = new goog.appengine.Channel(token);
+var socket = channel.open();
+var xhr = new XMLHttpRequest();
+
+socket.onopen = function(){
+    console.log("opened");
+};
+
 function ShowLength( str ) {
     var strArray = str.split("\n");
     var parNum = getParagraphNum(strArray);
