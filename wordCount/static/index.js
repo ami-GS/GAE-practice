@@ -3,21 +3,29 @@ var type = "jp";
 var token = document.getElementById("token").value;
 var channel = new goog.appengine.Channel(token);
 var socket = channel.open();
-var xhr = new XMLHttpRequest();
+
+function sendMessage(path, data){
+    //path += path+'/path'
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", path, true);
+    xhr.send(data);
+}
 
 socket.onopen = function(){
     console.log("opened");
 };
 
 function ShowLength( str ) {
-    var strArray = str.split("\n");
-    var parNum = getParagraphNum(strArray);
-    var blankNum = getBlankNum(strArray);
+    //sendMessage(location.href, str);
+    var strSplitLine = str.split(/\n/g);
+    var parNum = getParagraphNum(strSplitLine);
+    var blankNum = getBlankNum(strSplitLine);
+    console.log(strSplitLine, strSplitLine.length);
     //var engNum = getEngNum(strArray);
-    var lineNum = strArray.length - blankNum;
+    var lineNum = strSplitLine.length - blankNum;
     var words = 0;
     if(type == "jp"){words = str.length-blankNum-lineNum+1;}
-    else if(type == "en"){words = getEngNum(strArray);}
+    else if(type == "en"){words = getEngNum(strSplitLine);}
     document.getElementById("inputlength").innerHTML = words + " word";
     document.getElementById("line").innerHTML = lineNum + " line";
     document.getElementById("paragraph").innerHTML = parNum + " paragraph";
