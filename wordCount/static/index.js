@@ -5,7 +5,7 @@ var channel = new goog.appengine.Channel(token);
 var socket = channel.open();
 
 function sendMessage(path, data){
-    //path += path+'/path'
+    path += path+'echo';
     var xhr = new XMLHttpRequest();
     xhr.open("POST", path, true);
     xhr.send(data);
@@ -15,12 +15,15 @@ socket.onopen = function(){
     console.log("opened");
 };
 
+socket.onmessage = function(message){
+    console.log(message);
+};
+
 function ShowLength( str ) {
     //sendMessage(location.href, str);
     var strSplitLine = str.split(/\n/g);
     var parNum = getParagraphNum(strSplitLine);
     var blankNum = getBlankNum(strSplitLine);
-    console.log(strSplitLine, strSplitLine.length);
     //var engNum = getEngNum(strArray);
     var lineNum = strSplitLine.length - blankNum;
     var words = 0;
