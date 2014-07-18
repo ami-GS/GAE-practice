@@ -16,11 +16,13 @@ socket.onopen = function(){
 };
 
 socket.onmessage = function(message){
-    console.log(message);
+    text = message["data"];
+    document.getElementById("text").value = text;
+    ShowLength(text);
 };
 
 function ShowLength( str ) {
-    //sendMessage(location.href, str);
+    sendMessage(location.href, str);
     var strSplitLine = str.split(/\n/g);
     var parNum = getParagraphNum(strSplitLine);
     var blankNum = getBlankNum(strSplitLine);
