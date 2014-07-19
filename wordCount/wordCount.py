@@ -25,7 +25,20 @@ class MainPage(webapp2.RequestHandler):
 class SavePage(webapp2.RequestHandler):
     def post(self):
         user = users.get_current_user()
-        memcache.set(key=user.user_id(), value=self.request.body)
+        sentM = self.request.body
+        storedM = memcache.get(user.user_id())
+
+        if sentM == "NaN":
+            return
+        if not storedM:
+            storedM = ""
+
+        if int(sentM[-1]) == 1:
+            rmIdx = storedM.rindex(sentM[:-1])
+            memcache.set(key=user.user_id(), value=storedM[:rmIdx])
+        elif int(sentM[-1]) == 2:
+            print storedM, sentM
+            memcache.set(key=user.user_id(), value=storedM+sentM[:-1])
 
 
 application = webapp2.WSGIApplication([

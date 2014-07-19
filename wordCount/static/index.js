@@ -3,9 +3,40 @@ var type = "jp";
 var token = document.getElementById("token").value;
 var channel = new goog.appengine.Channel(token);
 var socket = channel.open();
+var textArea = document.getElementById("text");
+var bef = "";
+var start = 0;
+
+//window.onload = function () {
+//    checker();
+//};
+
+function checker(){
+    var af = textArea.value;
+    var len = af.split(bef).length;
+    if(bef != af && len <= 2){
+        if(len == 1){
+            sendMessage(location.href, bef.split(af)[1]+1); //1 means that the text are newly deleted
+        }
+        else{
+            if(start == 0){sendMessage(location.href, document.getElementById("text").value+2); start++;}
+            else {
+                sendMessage(location.href, af.split(bef)[1] + 2); //2 means that the text are newly appended
+            }
+        }
+        //console.log("send"+ af);
+    }
+    else{
+        //console.log("same");
+    }
+
+    bef = af;
+    setTimeout("checker()", 1000);
+}
+
 
 function sendMessage(path, data){
-    path += path+'echo';
+    path += 'echo';
     var xhr = new XMLHttpRequest();
     xhr.open("POST", path, true);
     xhr.send(data);
@@ -22,7 +53,10 @@ socket.onmessage = function(message){
 };
 
 function ShowLength( str ) {
-    sendMessage(location.href, str);
+    //if(str[str.length-1] == "\n"){console.log('enter');}
+    //else if(/\s/g.test(str[str.length-1])){console.log("space");}
+
+    //sendMessage(location.href, str);
     var strSplitLine = str.split(/\n/g);
     var parNum = getParagraphNum(strSplitLine);
     var blankNum = getBlankNum(strSplitLine);
