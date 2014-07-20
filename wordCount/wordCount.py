@@ -11,8 +11,13 @@ class MainPage(webapp2.RequestHandler):
         if not user:
             self.redirect(users.create_login_url(self.request.uri))
             return
-        elif cache:
-            channel.send_message(user.user_id(), cache)
+        try:
+            if cache:
+                channel.send_message(user.user_id(), cache)
+            else:
+                channel.send_message(user.user_id(), "")
+        except Exception as e:
+            print e # may be connection error;
 
         token = channel.create_channel(user.user_id())
         template_values = {
@@ -28,8 +33,6 @@ class SavePage(webapp2.RequestHandler):
         sentM = self.request.body
         storedM = memcache.get(user.user_id())
 
-        if sentM == "NaN":
-            return
         if not storedM:
             storedM = ""
 
@@ -37,7 +40,6 @@ class SavePage(webapp2.RequestHandler):
             rmIdx = storedM.rindex(sentM[:-1])
             memcache.set(key=user.user_id(), value=storedM[:rmIdx])
         elif int(sentM[-1]) == 2:
-            print storedM, sentM
             memcache.set(key=user.user_id(), value=storedM+sentM[:-1])
 
 

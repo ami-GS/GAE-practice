@@ -5,31 +5,34 @@ var channel = new goog.appengine.Channel(token);
 var socket = channel.open();
 var textArea = document.getElementById("text");
 var bef = "";
-var start = 0;
+var start = true;
 
-//window.onload = function () {
-//    checker();
-//};
+window.onload = function () {
+    setTimeout("checker()", 2000);
+};
 
 function checker(){
     var af = textArea.value;
-    var len = af.split(bef).length;
-    if(bef != af && len <= 2){
-        if(len == 1){
-            sendMessage(location.href, bef.split(af)[1]+1); //1 means that the text are newly deleted
-        }
-        else{
-            if(start == 0){sendMessage(location.href, document.getElementById("text").value+2); start++;}
-            else {
-                sendMessage(location.href, af.split(bef)[1] + 2); //2 means that the text are newly appended
+    var splitted = af.split(bef);
+    var len = splitted.length;
+    if(bef != af){
+        var sentMessage = "";
+        if(len == 1 && bef != ""){
+            delSplitted = bef.split(af);
+            sentMessage += delSplitted[1];
+            for(var i = 2; i < len; i++){
+                sentMessage += bef+splitted[i];
             }
+            sendMessage(location.href, sentMessage+1); //1 means that the text are newly deleted
         }
-        //console.log("send"+ af);
+        else if(len >= 2){
+            sentMessage += splitted[1];
+                for(var i = 2; i < len; i++){
+                    sentMessage += bef+splitted[i];
+                }
+                sendMessage(location.href, sentMessage+2); //2 means that the text are newly appended
+        }
     }
-    else{
-        //console.log("same");
-    }
-
     bef = af;
     setTimeout("checker()", 1000);
 }
@@ -46,13 +49,16 @@ socket.onopen = function(){
     console.log("opened");
 };
 
-socket.onmessage = function(message){
+socket.onmessage = function(message){ //initialize if server has cache
     text = message["data"];
     document.getElementById("text").value = text;
+    bef = text;
+    start = false;
     ShowLength(text);
 };
 
 function ShowLength( str ) {
+    if(start){sendMessage(location.href, str[0]+2); start=false;}
     //if(str[str.length-1] == "\n"){console.log('enter');}
     //else if(/\s/g.test(str[str.length-1])){console.log("space");}
 
