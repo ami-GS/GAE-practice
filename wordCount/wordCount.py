@@ -11,13 +11,8 @@ class MainPage(webapp2.RequestHandler):
         if not user:
             self.redirect(users.create_login_url(self.request.uri))
             return
-        try:
-            if cache:
-                channel.send_message(user.user_id(), cache)
-            else:
-                channel.send_message(user.user_id(), "")
-        except Exception as e:
-            print e # may be connection error;
+        if cache:
+            channel.send_message(user.user_id(), cache)
 
         token = channel.create_channel(user.user_id())
         template_values = {
