@@ -30,13 +30,20 @@ function checker(){
                 for(var i = 2; i < len; i++){
                     sentMessage += bef+splitted[i];
                 }
-                sendMessage(location.href, sentMessage+2); //2 means that the text are newly appended
+            sendMessage(location.href, sentMessage+2); //2 means that the text are newly appended
         }
     }
     bef = af;
     setTimeout("checker()", 1000);
 }
 
+function makeJSONMessage(nameArr, valueArr){
+	var json_obj = {};
+	for(var i = 0; i < nameArr.length; i++){
+		json_obj[nameArr[i]] = valueArr[i];
+	}
+	return JSON.stringify(json_obj);
+}
 
 function sendMessage(path, data){
     path += 'echo';
@@ -116,6 +123,7 @@ function chmod(lang){
     else if(lang == "English"){
         type = "en";
     }
+	//sendMessage(location.href, "type:"+type);
     ShowLength(document.getElementById("text").value);
 }
 
