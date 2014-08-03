@@ -3,14 +3,15 @@ from google.appengine.api import channel
 from google.appengine.api import users
 from google.appengine.ext.webapp import template
 from google.appengine.api import memcache
+import json
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
         user = users.get_current_user()
-        cache = memcache.get(user.user_id())
         if not user:
             self.redirect(users.create_login_url(self.request.uri))
             return
+        cache = memcache.get(user.user_id())
         if cache:
             channel.send_message(user.user_id(), cache)
 
@@ -30,13 +31,25 @@ class SavePage(webapp2.RequestHandler):
 
         if not storedM:
             storedM = ""
-
+        """
+            stored = {"t":"","c":""}
+        else:
+            stored = json.loads(storedM)
+            
+        sent = json.loads(sentM)
+        if int(sent["c"][-1]) == 1:
+            rmIdx = stored.rindex(sent["c"][:-1])
+            store = json.dump({"t":sent["t"], "c":stored["c"][:rmIdx]})
+            memcache.set(key=user.user_id(), value=store)
+        elif int(sent["c"][-1] == 2):
+            store = json.dump({"t":sent["t"], "c":store["c"]+sent["c"][:-1]})
+            memcache.set(key=user.user_id(), value=store)
+        """
         if int(sentM[-1]) == 1:
             rmIdx = storedM.rindex(sentM[:-1])
             memcache.set(key=user.user_id(), value=storedM[:rmIdx])
         elif int(sentM[-1]) == 2:
             memcache.set(key=user.user_id(), value=storedM+sentM[:-1])
-
 
 application = webapp2.WSGIApplication([
     ("/", MainPage),

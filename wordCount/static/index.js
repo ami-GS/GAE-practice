@@ -24,6 +24,7 @@ function checker(){
                 sentMessage += bef+splitted[i];
             }
             sendMessage(location.href, sentMessage+1); //1 means that the text are newly deleted
+            //sendMessage(location.href, makeJSONMessage(["t", "c"], [type, sentMessage+1])); //1 means that the text are newly deleted
         }
         else if(len >= 2){
             sentMessage += splitted[1];
@@ -57,7 +58,10 @@ socket.onopen = function(){
 };
 
 socket.onmessage = function(message){ //initialize if server has cache
-    text = message["data"];
+	text = message["data"];
+    //json = message["data"];
+	//text = JSON.parse(json);
+	console.log(text);
     document.getElementById("text").value = text;
     bef = text;
     start = false;
@@ -113,7 +117,7 @@ function getParagraphNum(strArray){
         }
         i++;
     }
-    return ans
+    return ans;
 }
 
 function chmod(lang){
