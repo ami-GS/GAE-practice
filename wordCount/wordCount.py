@@ -31,11 +31,13 @@ class SavePage(webapp2.RequestHandler):
 
         if not storedM:
             storedM = ""
+            #storedM = '{"t":"","c":""}'
+        else :
+            try:
+                stored = json.loads(storedM)
+            except Exception as e:
+                print e
         """
-            stored = {"t":"","c":""}
-        else:
-            stored = json.loads(storedM)
-            
         sent = json.loads(sentM)
         if int(sent["c"][-1]) == 1:
             rmIdx = stored.rindex(sent["c"][:-1])
@@ -50,6 +52,7 @@ class SavePage(webapp2.RequestHandler):
             memcache.set(key=user.user_id(), value=storedM[:rmIdx])
         elif int(sentM[-1]) == 2:
             memcache.set(key=user.user_id(), value=storedM+sentM[:-1])
+
 
 application = webapp2.WSGIApplication([
     ("/", MainPage),

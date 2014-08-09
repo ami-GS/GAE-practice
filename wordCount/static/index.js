@@ -32,6 +32,7 @@ function checker(){
                     sentMessage += bef+splitted[i];
                 }
             sendMessage(location.href, sentMessage+2); //2 means that the text are newly appended
+			//sendMessage(location.href, makeJSONMessage(["t", "c"], [type, sentMessage+2]));
         }
     }
     bef = af;
@@ -43,6 +44,8 @@ function makeJSONMessage(nameArr, valueArr){
 	for(var i = 0; i < nameArr.length; i++){
 		json_obj[nameArr[i]] = valueArr[i];
 	}
+	//val = JSON.stringify(json_obj);
+	//console.log(val);
 	return JSON.stringify(json_obj);
 }
 
@@ -58,9 +61,9 @@ socket.onopen = function(){
 };
 
 socket.onmessage = function(message){ //initialize if server has cache
-	text = message["data"];
-    //json = message["data"];
-	//text = JSON.parse(json);
+	//text = message["data"];
+    json = message["data"];
+	text = JSON.parse(json);
 	console.log(text);
     document.getElementById("text").value = text;
     bef = text;
